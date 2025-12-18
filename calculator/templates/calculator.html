@@ -1,54 +1,35 @@
-<!DOCTYPE html>
-<html lang="ru">
+{% extends 'base.html' %}
+{% block content %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Калькулятор</title>
-</head>
+<h1>Калькулятор</h1>
 
-<body>
+<form method="post" action="{% url 'calculator:calculate' %}">
+    {% csrf_token %}
 
-    <h1>Калькулятор</h1>
+    <input type="number" name="a" step="any" required>
 
-    <form method="post">
-        {% csrf_token %}
-        <input type="number" name="a" step="any" required>
+    <select name="operation">
+        <option value="+">+</option>
+        <option value="-">−</option>
+        <option value="*">×</option>
+        <option value="/">÷</option>
+        <option value="^">xʸ</option>
+        <option value="sqrt">√x</option>
+    </select>
 
-        <select name="operation">
-            <option value="add">+</option>
-            <option value="sub">−</option>
-            <option value="mul">×</option>
-            <option value="div">÷</option>
-        </select>
+    <input type="number" name="b">
 
-        <input type="number" name="b" step="any" required>
+    <button type="submit">Посчитать</button>
+</form>
 
-        <button type="submit">Посчитать</button>
-    </form>
+{% if result is not None %}
+<p><strong>Результат:</strong> {{ result }}</p>
+{% endif %}
 
-    {% if result is not None %}
-    <h2>Результат: {{ result }}</h2>
-    {% endif %}
+{% if form.errors %}
+<p style="color:red;">Ошибка ввода</p>
+{% endif %}
 
-    {% if error %}
-    <p style="color:red;">{{ error }}</p>
-    {% endif %}
+<a href="{% url 'calculator:history' %}">История операций</a>
 
-    <hr>
-
-    <h2>История операций</h2>
-    <ul>
-        {% for item in history %}
-        <li>
-            {{ item.first_number }} {{ item.operation }} {{ item.second_number }}
-            = {{ item.result }}
-            ({{ item.created_at|date:"d.m.Y H:i" }})
-        </li>
-        {% empty %}
-        <li>История пуста</li>
-        {% endfor %}
-    </ul>
-
-</body>
-
-</html>
+{% endblock %}

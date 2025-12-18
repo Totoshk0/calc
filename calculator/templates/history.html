@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>История операций</h2>
+
+<ul>
+    {% for item in history %}
+    <li>
+        {{ item.a }} {{ item.operation }} {{ item.b }} = {{ item.result }}
+        ({{ item.time }})
+    </li>
+    {% empty %}
+    <li>История пуста</li>
+    {% endfor %}
+</ul>
+
+<form method="post" action="{% url 'calculator:clear' %}">
+    {% csrf_token %}
+    <button type="submit">Очистить историю</button>
+</form>
+
+{% endblock %}
