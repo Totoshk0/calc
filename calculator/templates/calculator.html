@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Калькулятор</title>
+</head>
+
+<body>
+
+    <h1>Калькулятор</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="number" name="a" step="any" required>
+
+        <select name="operation">
+            <option value="add">+</option>
+            <option value="sub">−</option>
+            <option value="mul">×</option>
+            <option value="div">÷</option>
+        </select>
+
+        <input type="number" name="b" step="any" required>
+
+        <button type="submit">Посчитать</button>
+    </form>
+
+    {% if result is not None %}
+    <h2>Результат: {{ result }}</h2>
+    {% endif %}
+
+    {% if error %}
+    <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <hr>
+
+    <h2>История операций</h2>
+    <ul>
+        {% for item in history %}
+        <li>
+            {{ item.first_number }} {{ item.operation }} {{ item.second_number }}
+            = {{ item.result }}
+            ({{ item.created_at|date:"d.m.Y H:i" }})
+        </li>
+        {% empty %}
+        <li>История пуста</li>
+        {% endfor %}
+    </ul>
+
+</body>
+
+</html>
